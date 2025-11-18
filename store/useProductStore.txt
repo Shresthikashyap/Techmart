@@ -1,0 +1,140 @@
+import { create } from "zustand";
+import axios from "axios";
+import { Product, Category, Cart } from "@/types/types";
+import useSWR from "swr";
+
+interface ProductState {
+  products: Product[];
+  setProducts: (products: Product[]) => void;
+}
+
+interface CategoryState {
+  categories: Category[];
+  setCategories: (categories: Category[]) => void;
+}
+
+interface CartState {
+  cart: Cart;
+  setCartProducts: (cart: Cart) => void;
+}
+
+interface CompareState {
+  compare: Cart,
+  setCompareProducts: (compare: Cart) => void;
+}
+
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+export const useProductStore = () => {
+  const { products, setProducts } = useProductStore();
+  //const { error, isLoading } = useSWR<Product[]>(
+  //   `https://wordpress-1317621-5009079.cloudwaysapps.com/wp-json/wc/v3/products?consumer_key=ck_8fc0f6232682e8990f6d21120acd1289136e6c86&consumer_secret=cs_1c7df267cb08426d3cd6433ad358f8440da5a6f6`,
+  //   fetcher,
+  //   {
+  //     onSuccess: (data) => {
+  //       setProducts(data);
+  //     }
+  //   }
+  // );
+  const { error, isLoading } = useSWR<Product[]>(
+    `/api/products`,
+    fetcher,
+    {
+      onSuccess: (data) => {
+        setProducts(data);
+      },
+    }
+  );
+
+  return {
+    products,
+    isLoading,
+    error,
+  };
+};
+
+export const useCategoryStore = () => {
+
+  const { categories, setCategories } = useProductStore();
+
+  const { error, isLoading } = useSWR<Category[]>(
+    `/api/products/categories`,
+    fetcher,
+    {
+      onSuccess: (data) => {
+        setCategories(data);
+      },
+    }
+  );
+
+  return {
+    categories,
+    isLoading,
+    error,
+  };
+};
+
+export const useProductStore = create<
+  ProductState & CategoryState & CartState & CompareState
+>()((set) => ({
+  products: [],
+  setProducts: (products: Product[]) => set({ products }),
+
+  categories: [],
+  setCategories: (categories: Category[]) => set({ categories }),
+
+  cart: [],
+  setCartProducts: (cart: Cart) => set({ cart }),
+
+  compare: [],
+  setCompareProducts: (compare: Cart) => set({ compare }),
+}));
+
+// import { create } from "zustand";
+// import axios from "axios";
+// //import useSWR  from "swr";
+// import { Product } from "@/types/types";
+
+// //const fetcher = (url:string) => axios(url).then(r=>r.data);
+
+// export const useProductStore = create((set) => ({
+//   products: [] as Product[],
+//   // fetchProducts: async () => {
+//   //   try {
+//   //     const response = await axios.get(
+//   //       `https://wordpress-1317621-5009079.cloudwaysapps.com/wp-json/wc/v3/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`,
+//   //       {
+//   //         headers: { "Content-Type": "application/json" },
+//   //       }
+//   //     );
+
+//   //     // const { data } = useSWR(`https://wordpress-1317621-5009079.cloudwaysapps.com/wp-json/wc/v3/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`, fetcher);
+
+//   //     console.log(response.data);
+//   //     set({ products: response.data });
+//   //   } catch (error) {
+//   //     console.log(error);
+//   //   }
+//   // },
+
+//   setProducts: (products: Product[]) => set({ products }),
+
+//   categories:[],
+//   fetchCategories: async () => {
+//     try{
+//       const response = await axios.get(
+//         `https://wordpress-1317621-5009079.cloudwaysapps.com/wp-json/wc/v3/products/categories?consumer_key=ck_8fc0f6232682e8990f6d21120acd1289136e6c86&consumer_secret=cs_1c7df267cb08426d3cd6433ad358f8440da5a6f6`,
+//         {
+//           headers: { "Content-Type": "application/json" },
+//         }
+//       )
+
+//       console.log('product category ',response.data)
+//       set({categories: response.data})
+//     }
+//     catch(error) {
+//       console.log(error)
+//     }
+//   }
+// }));
