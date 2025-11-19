@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Button } from '@heroui/button';
 import React, { useEffect, useState } from 'react';
-import { Heart, User, ShoppingCart, Menu, X } from 'lucide-react';
+import { Heart, User, ShoppingCart, Menu, X, LogOut } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { useRouter } from 'next/navigation';
 import SearchForm from './SearchForm';
@@ -14,7 +14,7 @@ export default function Header() {
   const { cart, fetchCart } = useCartStore();
   const [showCartModal, setShowCartModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { token } = useAuthStore();
+  const { token, clearToken } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -116,7 +116,15 @@ export default function Header() {
                 onClick={() => setShowCartModal(true)} 
               />
             </div>
+
+            {token && 
+              <LogOut 
+                    className='cursor-pointer text-gray-400 hover:text-gray-600 transition-colors' 
+                    size={20}
+                    onClick={()=>clearToken()}
+             />}
           </div>
+
 
           {/* Mobile Actions */}
           <div className="flex lg:hidden items-center gap-3">

@@ -41,7 +41,8 @@ export default function AddToWishlist({ item }: { item: CartItem }) {
                 addToWishlist(item.productId);
                 console.log("Added to wishlist: ", item);
             } else {
-                toast.error("Product ID is missing, cannot add to wishlist.",{
+                toast.error("Failed to add to wishlist"
+                ,{
                     position: "bottom-center"
                 });
             }

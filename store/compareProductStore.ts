@@ -34,9 +34,7 @@ export const useCompareStore = create<CompareState>((set, get) => ({
     } catch (error) {
       set({ loading: false });
       if (error instanceof Error) {
-        toast.error(error.message,{
-          position: "bottom-center"
-        });
+        console.log('Error fetching compare products:', error);
       } else {
         toast.error('Failed to fetch compare products',{
           position: "bottom-center"
@@ -75,9 +73,7 @@ export const useCompareStore = create<CompareState>((set, get) => ({
         set({ loading: false });
         } catch (error) {
           if (error instanceof Error) {
-            toast.error(error.message,{
-              position: "bottom-center"
-            });
+            console.log('Error adding to compare:', error);
           } else {
             toast.error('Failed to add item to compare',{
               position: "bottom-center"
@@ -108,9 +104,7 @@ export const useCompareStore = create<CompareState>((set, get) => ({
       set({ loading: false });
     } catch (error) {
       if (error instanceof Error) {
-        toast.error(error.message,{
-          position: "bottom-center"
-        });
+        console.log('Error removing from compare:', error);
       } else {
         toast.error('Failed to remove item from compare',{
           position: "bottom-center"

@@ -38,7 +38,7 @@ export default function AddToCompare({item}: {item: ComparisonItem }){
           if (typeof item.productId === "number") {
             addToCompare(item.productId);
           } else {
-            toast.error("Product ID is missing. Cannot add to compare.", {
+            toast.error("Failed to add to compare.", {
               position: "bottom-center",
               autoClose: 5000,
               pauseOnHover: true,
@@ -49,7 +49,7 @@ export default function AddToCompare({item}: {item: ComparisonItem }){
       }
       catch(err){
         console.log(err, 'error in adding to compare');
-        toast.error("Something's Wrong !", {
+        toast.error("Something Went Wrong !", {
           position: "bottom-center"
         });
       }

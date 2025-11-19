@@ -100,7 +100,7 @@ export default function ProductsPage() {
           setFilteredProducts(filtered);
         }
       } catch (err) {
-        toast.error("Error processing category from URL. Please try again.",
+        toast.error("Error processing category. Please try again.",
           {
             position: "bottom-center"
           }

@@ -71,7 +71,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     } catch (error) {
       set({ loading: false });
       if (error instanceof Error) {
-        toast.error(error.message);
+        console.log('Error adding to cart:', error);
       } else {
         toast.error('Failed to add item to cart',{
           position: "bottom-center"
@@ -99,9 +99,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     } catch (error) {
       set({ loading: false });
       if (error instanceof Error) {
-        toast.error(error.message,{
-          position: "bottom-center"
-        });
+        console.log('Error removing from cart:', error);
       } else {
         toast.error('Failed to remove item from cart',{
           position: "bottom-center"
@@ -127,9 +125,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     } catch (error) {
       set({ loading: false });
       if (error instanceof Error) {
-        toast.error(error.message,{
-          position: "bottom-center"
-        });
+        console.log('Error updating item quantity:', error);
       } else {
         toast.error('Failed to update item quantity',{
           position: "bottom-center"
@@ -159,9 +155,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     } catch (error) {
       set({ loading: false });
       if (error instanceof Error) {
-        toast.error(error.message,{
-          position: "bottom-center"
-        });
+        console.log('Error clearing cart:', error);
       } else {
         toast.error('Failed to clear cart',{
           position: "bottom-center"

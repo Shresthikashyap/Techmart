@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAuthStore } from '@/store/authStore';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@heroui/button';
 import { parseJwt } from '@/utils/parseToken';
 
@@ -50,9 +51,21 @@ const SigninPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 px-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Sign In</h1>
+        
+        <div className="flex flex-col items-center mb-6">
+          <Image 
+            src="/logo.png" 
+            alt="TechMart Logo" 
+            width={60} 
+            height={60}
+            className="mb-3 w-36 h-12"
+          />
+          <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
+          <p className="text-sm text-gray-500 mt-1">Sign in to your TechMart account</p>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-gray-700 font-medium mb-1">Email</label>

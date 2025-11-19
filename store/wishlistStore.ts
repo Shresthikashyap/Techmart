@@ -39,9 +39,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
       });
     } catch (error) {
       if (error instanceof Error) {
-        toast.error(error.message,{
-          position: "bottom-center"
-        });
+        console.log('Error fetching wishlist:', error);
       } else {
         toast.error('Failed to fetch wishlist',{
           position: "bottom-center"
@@ -82,9 +80,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
     } catch (error) {
       set({ loading: false });
       if (error instanceof Error) {
-        toast.error(error.message,{
-          position: "bottom-center"
-        });
+        console.log('Error adding to wishlist:', error);
       } else {
         toast.error('Failed to add item to wishlist',{
           position: "bottom-center"
@@ -114,9 +110,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
       set({ loading: false });
     } catch (error) {
       if (error instanceof Error) {
-        toast.error(error.message,{
-          position: "bottom-center"
-        });
+        console.log('Error removing from wishlist:', error);
       } else {
         toast.error('Failed to remove item from wishlist',{
           position: "bottom-center"
@@ -149,10 +143,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
 
       set({ loading: false });
       if (error instanceof Error) {
-        toast.error(error.message,{
-          position: "bottom-center"
-        });
-      } else {
+        
         toast.error('Failed to clear wishlist',{
           position: "bottom-center"
         });
