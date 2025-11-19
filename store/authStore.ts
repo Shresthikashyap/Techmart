@@ -3,6 +3,9 @@ import { create } from 'zustand';
 //import { Token } from '@/types/types';
 import { persist } from 'zustand/middleware';
 import Cookies from 'js-cookie';
+import { useCartStore } from './cartStore';
+import { useWishlistStore } from './wishlistStore';
+import { useCompareStore } from './compareProductStore';
 
 interface UserState {
   token: string | null;
@@ -26,6 +29,9 @@ export const useAuthStore = create<UserState>()(
       clearToken: () => {
         Cookies.remove('auth_token');
         set({ token: null });
+        useCartStore.getState().cart=[];
+        useWishlistStore.getState().wishlist = [];
+        useCompareStore.getState().compareProducts = [];
       },
     }),
     {

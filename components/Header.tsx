@@ -39,7 +39,7 @@ export default function Header() {
 
   return (
     <div className="sticky top-0 bg-white z-50 shadow-sm">
-      <div className="container mx-auto px-4 lg:px-16">
+      <div className="container mx-auto px-4 xl:px-16">
         {/* Main header */}
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
@@ -49,14 +49,14 @@ export default function Header() {
               alt="logo"
               width={180}
               height={60}
-              className='w-32 h-16 sm:w-40 lg:w-48'
+              className='w-36 h-10 sm:w-40 sm:h-10 md:w-36 md:h-12 lg:w-44 lg:h-14 xl:w-48 xl:h-16'
               priority
             />
           </header>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Now shows from 1024px (lg) */}
           <nav className="hidden lg:block">
-            <ul className="flex items-center gap-8 cursor-pointer">
+            <ul className="flex items-center gap-4 lg:gap-6 xl:gap-8 cursor-pointer text-sm xl:text-base">
               <li 
                 onClick={() => router.push('/')}
                 className="hover:text-gray-600 transition-colors"
@@ -84,22 +84,21 @@ export default function Header() {
             </ul>
           </nav>
 
-          {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-4">
             <div className='sticky z-30'>
               <SearchForm />
             </div>
 
             <Heart 
-              size={24} 
-              className='cursor-pointer text-gray-400 hover:text-gray-600 transition-colors' 
+              size={20} 
+              className='cursor-pointer text-gray-400 hover:text-gray-600 transition-colors xl:w-6 xl:h-6' 
               onClick={() => router.push('/wishlist')} 
             />
 
             {!token && (
-              <Button className='border-2 border-gray-500 rounded-2xl' onPress={() => router.push('/signin')}>
-                <User size={24} className='cursor-pointer'/> 
-                <span>Sign In</span>
+              <Button className='border-2 border-gray-400 hover:border-gray-600 rounded-2xl text-sm xl:text-base px-3 xl:px-4' onPress={() => router.push('/signin')}>
+                <User size={17} className='cursor-pointer text-gray-400 hover:text-gray-600 transition-colors xl:w-6 xl:h-6'/> 
+                <span className='hidden xl:inline-block'>Sign In</span>              
               </Button>
             )}
 
@@ -111,8 +110,8 @@ export default function Header() {
               )}
               
               <ShoppingCart 
-                size={24} 
-                className='cursor-pointer text-gray-400 hover:text-gray-600 transition-colors' 
+                size={20} 
+                className='cursor-pointer text-gray-400 hover:text-gray-600 transition-colors xl:w-6 xl:h-6' 
                 onClick={() => setShowCartModal(true)} 
               />
             </div>
@@ -121,12 +120,14 @@ export default function Header() {
               <LogOut 
                     className='cursor-pointer text-gray-400 hover:text-gray-600 transition-colors' 
                     size={20}
-                    onClick={()=>clearToken()}
+                    onClick={()=>{
+                      clearToken()
+                      router.push('/')}}
              />}
           </div>
 
 
-          {/* Mobile Actions */}
+          {/* Mobile Actions - Now hides at 1024px (lg) */}
           <div className="flex lg:hidden items-center gap-3">
             <Heart 
               size={20} 
@@ -158,7 +159,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Now hides at 1024px (lg) */}
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 bg-white">
             <div className="px-4 py-6 space-y-4">

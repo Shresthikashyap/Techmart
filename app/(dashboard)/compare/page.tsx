@@ -19,8 +19,8 @@ export default function Compare() {
   useEffect(() => {
     fetchCompareProducts();
     fetchCategories();
-    console.log('------> ',compareProducts);
-  }, [fetchCompareProducts]);
+    // console.log('------> ',compareProducts);
+  }, [fetchCategories, fetchCompareProducts]);
 
   const handleLeftScroll = () => {
     const container = document.querySelector(".overflow-x-auto") as HTMLElement;
@@ -46,8 +46,8 @@ export default function Compare() {
     <div>
       <div className="bg-gray-100 w-full flex flex-col justify-center items-center py-5 font-semibold ">
         <p className=" text-3xl text-orange-400">Compare</p>
-        <div className="text-gray-400 mt-2 text-[20px]">
-          Home{" "}
+        <div className="text-gray-400 mt-2 text-[20px] cursor-pointer">
+          <span onClick={()=>router.push('/')}>Home{" "}</span>
           {pathname
             .replace(/\//g, " > ")
             .replace(/\b\w/g, (char) => char.toUpperCase())}
@@ -236,7 +236,7 @@ export default function Compare() {
           </div>
         </div>
         ):(
-          <div className="flex flex-col items-center text-gray-500 mt-25 min-h-[30vh]">
+          <div className="flex flex-col items-center text-gray-500 py-40">
             <PackageX className="w-12 h-12 mb-2" />
             <p className="text-lg">No products available to compare</p>
           </div>
