@@ -3,7 +3,7 @@ import { useProductStore } from "@/store/productStore";
 import { useEffect } from "react";
 
 export const useProducts = () => {
-  const { products, setProducts, isLoading ,setIsLoading, error ,setError } = useProductStore();
+  const { products, setProducts, isLoading, setIsLoading, error, setError } = useProductStore();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -24,7 +24,7 @@ export const useProducts = () => {
     };
 
     fetchProducts();
-  }, [setProducts]);
+  }, [setProducts, setError, setIsLoading]);
 
   return {
     products,

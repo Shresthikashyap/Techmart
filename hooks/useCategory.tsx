@@ -13,9 +13,9 @@ export const useProductCategories = () => {
         setCategories(response.data);
       } catch (err: unknown) {
         if (axios.isAxiosError(err)) {
-          setError(err.message || "An unknown error occurred");
+          setError(new Error(err.message || "An unknown error occurred"));
         } else {
-          setError("An unknown error occurred");
+          setError(new Error("An unknown error occurred"));
         }
       } finally {
         setIsLoading(false);
@@ -23,7 +23,7 @@ export const useProductCategories = () => {
     };
 
     fetchCategories();
-  }, []);
+  }, [setCategories, setError, setIsLoading]);
 
   return {
     categories,
