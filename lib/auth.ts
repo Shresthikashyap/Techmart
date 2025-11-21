@@ -1,26 +1,27 @@
 import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 interface JwtPayload {
   userId: string;
-  [key: string]: any;
+  iat?: number;
+  exp?: number;
 }
 
 export interface AuthenticatedRequest extends NextRequest {
-  user?: any;
+  user?: User;
 }
 
-export const authenticate = async (request: NextRequest) => {
+export const authenticate = async (request: NextRequest): Promise<User> => {
   try {
     const token = request.headers.get('Authorization');
     
     if (!token) {
       throw new Error('No token provided');
     }
-    console.log('Token:*************************** ', token.substring(7), token.startsWith('Bearer '));
+    console.log('Token:*************************** ', token);
 
     // Remove 'Bearer ' prefix if present
     const cleanToken = token.startsWith('Bearer ') ? token.substring(7) : token;
@@ -28,11 +29,11 @@ export const authenticate = async (request: NextRequest) => {
     console.log('Token:*************************** ', cleanToken);
 
     const decoded = jwt.verify(cleanToken, process.env.SECRET_KEY as string) as JwtPayload;
-   console.log('----------------------------------------> ',decoded);
+    console.log('----------------------------------------> ', decoded);
+    
     if (!decoded) {
       throw new Error('Invalid token');
     }
-     
     
     const user = await prisma.user.findUnique({
       where: {
@@ -40,7 +41,6 @@ export const authenticate = async (request: NextRequest) => {
       }
     });
 
-    
     if (!user) {
       throw new Error('User not found');
     }
@@ -55,8 +55,10 @@ export const authenticate = async (request: NextRequest) => {
 };
 
 // Helper function to use in API routes that need authentication
-export const withAuth = (handler: (request: NextRequest, user: any, params?: any) => Promise<Response>) => {
-  return async (request: NextRequest, context?: { params: any }) => {
+export const withAuth = (
+  handler: (request: NextRequest, user: User, params?: Record<string, string>) => Promise<Response>
+) => {
+  return async (request: NextRequest, context?: { params: Record<string, string> }) => {
     try {
       const user = await authenticate(request);
       return await handler(request, user, context?.params);
