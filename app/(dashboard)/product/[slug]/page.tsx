@@ -26,7 +26,7 @@ export default function Product({ params }: { params: Promise<{ slug: string }> 
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
   
   const [product, setProduct] = useState<Product | null>(null);
   const [productError, setProductError] = useState<Error | null>(null);

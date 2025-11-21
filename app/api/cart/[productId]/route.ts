@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
 // PUT - Update cart item quantity
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   try {
     const user = await authenticate(request);
@@ -113,7 +113,8 @@ export async function PUT(
       }, { status: 401 });
     }
 
-    const productId = parseInt(params.productId);
+    const { productId: productIdStr } = await params; // Await params
+    const productId = parseInt(productIdStr);
     const { quantity } = await request.json();
 
     // Find the cart item first
@@ -188,7 +189,7 @@ export async function PUT(
 // DELETE - Remove item from cart
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   try {
     const user = await authenticate(request);
@@ -198,7 +199,8 @@ export async function DELETE(
       }, { status: 401 });
     }
 
-    const productId = parseInt(params.productId);
+    const { productId: productIdStr } = await params; // Await params
+    const productId = parseInt(productIdStr);
 
     // Find the cart item first
     const existingCartItem = await prisma.cartItem.findFirst({

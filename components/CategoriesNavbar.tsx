@@ -18,7 +18,7 @@ export default function CategoriesNavbar() {
     useEffect(() => {
         fetchProducts();
         fetchCategories();
-    }, [fetchCategories]);
+    }, [fetchProducts, fetchCategories]);
 
     console.log(categories.length, 'categories-- ', categories);
     // useEffect(()=>{

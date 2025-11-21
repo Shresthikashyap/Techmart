@@ -55,7 +55,7 @@ export default function ProductsPage() {
       setAllProducts(products);
     }
     fetchCategories();
-  }, [searchParams, fetchBestSellerProducts, fetchNewArrivalProducts, fetchTrendingProducts, fetchProducts, fetchCategories]);
+  }, [searchParams, fetchBestSellerProducts, fetchNewArrivalProducts, fetchTrendingProducts, fetchProducts, fetchCategories, products, bestSellerProducts, newArrivalProducts, trendingProducts]);
 
   // Handle URL parameter for category - only on initial load
   useEffect(() => {
