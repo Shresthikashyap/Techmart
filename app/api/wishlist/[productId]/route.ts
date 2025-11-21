@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 // POST - Add item to wishlist
 export async function POST(
   request: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   try {
     const user = await authenticate(request);
@@ -20,8 +20,9 @@ export async function POST(
 
     console.log('Authenticated user:', user);
     
-    // Get productId from URL params, not request body
-    const productId = parseInt(params.productId);
+    // Await params and get productId from URL params
+    const { productId: productIdStr } = await params;
+    const productId = parseInt(productIdStr);
     console.log('Product ID from params:', productId);
 
     if (!productId || isNaN(productId)) {
@@ -92,7 +93,7 @@ export async function POST(
 // DELETE - Remove item from wishlist
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   try {
     const user = await authenticate(request);
@@ -102,7 +103,8 @@ export async function DELETE(
       }, { status: 401 });
     }
 
-    const productId = parseInt(params.productId);
+    const { productId: productIdStr } = await params;
+    const productId = parseInt(productIdStr);
 
     if (!productId || isNaN(productId)) {
       return NextResponse.json({
