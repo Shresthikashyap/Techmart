@@ -37,7 +37,7 @@ export const authenticate = async (request: NextRequest): Promise<User> => {
     
     const user = await prisma.user.findUnique({
       where: {
-        userId: decoded.userId
+        userId: parseInt(decoded.userId,10),
       }
     });
 
