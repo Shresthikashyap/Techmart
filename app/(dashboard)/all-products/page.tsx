@@ -1,5 +1,3 @@
-//all-products/page.tsx
-
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -24,6 +22,7 @@ export default function ProductsPage() {
   const [showAllProducts, setShowAllProducts] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const allCheckboxRef = useRef<HTMLInputElement>(null);
+  const hasProcessedUrlParams = useRef<boolean>(false); // ← ADD THIS
   const productsPerPage = 8;
   
   const totalProductsPages = Math.ceil(
@@ -40,31 +39,44 @@ export default function ProductsPage() {
   useEffect(() => {
     const productType = searchParams.get("type"); 
 
-    // Apply product type filter from URL parameter
     if (productType === "bestseller") {
       fetchBestSellerProducts();
-      setAllProducts(bestSellerProducts)
     } else if (productType === "new-arrivals") {
       fetchNewArrivalProducts();
-      setAllProducts(newArrivalProducts);
     } else if (productType === "trending") {
       fetchTrendingProducts();
-      setAllProducts(trendingProducts);
     } else {
       fetchProducts();
-      setAllProducts(products);
     }
     fetchCategories();
-  }, [searchParams, fetchBestSellerProducts, fetchNewArrivalProducts, fetchTrendingProducts, fetchProducts, fetchCategories, products, bestSellerProducts, newArrivalProducts, trendingProducts]);
+  }, [searchParams, fetchBestSellerProducts, fetchNewArrivalProducts, fetchTrendingProducts, fetchProducts, fetchCategories]);
 
-  // Handle URL parameter for category - only on initial load
+  // Separate effect to update allProducts when store data changes
   useEffect(() => {
+    const productType = searchParams.get("type");
+    
+    if (productType === "bestseller") {
+      setAllProducts(bestSellerProducts);
+    } else if (productType === "new-arrivals") {
+      setAllProducts(newArrivalProducts);
+    } else if (productType === "trending") {
+      setAllProducts(trendingProducts);
+    } else {
+      setAllProducts(products);
+    }
+  }, [products, bestSellerProducts, newArrivalProducts, trendingProducts, searchParams]);
 
+  // Handle URL parameter for category - ONLY ONCE
+  useEffect(() => {
     const categorySearch = searchParams.get("category");
     
-    
-    // Only process URL params if we have products, categories, and a category search parameter
-    if (allProducts?.length > 0 && categories?.length > 0 && categorySearch) {
+    // Only process if we haven't already AND we have data AND there's a category param
+    if (
+      !hasProcessedUrlParams.current && // ← CHECK THE REF
+      allProducts?.length > 0 && 
+      categories?.length > 0 && 
+      categorySearch
+    ) {
       try {
         const productsCategory = categories.find(
           (category: Category) => category.slug === categorySearch
@@ -73,7 +85,7 @@ export default function ProductsPage() {
         const categoryId = productsCategory ? productsCategory.categoryId : null;
         
         if (categoryId === null) {
-          toast.error("Category not found for the given slug.",{
+          toast.error("Category not found for the given slug.", {
             position: "bottom-center"
           });
         } else {
@@ -86,34 +98,23 @@ export default function ProductsPage() {
             allCheckboxRef.current.checked = false;
           }
           
-          // Filter products based on the URL parameter
-          let filtered = allProducts.filter((product: Product) => {
-            return categoryId === product.categoryId;
-          });
-          
-          // Apply price filter
-          filtered = filtered.filter((product: Product) => {
-            const productPrice =product.price;
-            return productPrice <= priceRange;
-          });
-          
-          setFilteredProducts(filtered);
+          hasProcessedUrlParams.current = true; // ← MARK AS PROCESSED
         }
       } catch (err) {
-        toast.error("Error processing category. Please try again.",
-          {
-            position: "bottom-center"
-          }
-        );
+        toast.error("Error processing category. Please try again.", {
+          position: "bottom-center"
+        });
         console.log(err);
       }
     }
-    // This effect should only run once when products and categories are loaded
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allProducts, categories, searchParams]);
 
-  // Apply filters whenever selectedCategories, showAllProducts, or priceRange changes
-  // This is separate from the URL parameter handling
+  // Reset the ref when searchParams change (new navigation)
+  useEffect(() => {
+    hasProcessedUrlParams.current = false;
+  }, [searchParams]);
+
+  // Apply filters - separate from URL parameter handling
   useEffect(() => {
     if (!allProducts || allProducts.length === 0) return;
 
@@ -136,7 +137,7 @@ export default function ProductsPage() {
       // Update filteredProducts
       setFilteredProducts(result);
     } catch (err) {
-      toast.error("Error filtering products. Please try again.",{
+      toast.error("Error filtering products. Please try again.", {
         position: "bottom-center"
       });
       console.log(err);
@@ -156,12 +157,9 @@ export default function ProductsPage() {
     const isChecked = e.target.checked;
     
     if (isChecked) {
-      // When "All" is checked, uncheck all other categories and show all products
       setSelectedCategories([]);
       setShowAllProducts(true);
     } else {
-      // If "All" is unchecked but no categories are selected,
-      // recheck "All" to ensure at least one filter is active
       if (selectedCategories.length === 0) {
         e.target.checked = true;
         setShowAllProducts(true);
@@ -176,24 +174,19 @@ export default function ProductsPage() {
     const isChecked = e.target.checked;
 
     if (isChecked) {
-      // When a category is checked
       if (showAllProducts) {
-        // If "All" was active, uncheck it and start with just this category
         setShowAllProducts(false);
         if (allCheckboxRef.current) {
           allCheckboxRef.current.checked = false;
         }
         setSelectedCategories([categoryId]);
       } else {
-        // Otherwise, add to existing selection
         setSelectedCategories(prev => [...prev, categoryId]);
       }
     } else {
-      // Remove the category from selected categories
       const updatedCategories = selectedCategories.filter(id => id !== categoryId);
       setSelectedCategories(updatedCategories);
       
-      // If no categories are selected, check "All" again
       if (updatedCategories.length === 0) {
         setShowAllProducts(true);
         if (allCheckboxRef.current) {

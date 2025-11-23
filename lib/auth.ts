@@ -1,8 +1,11 @@
 import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { PrismaClient, User } from '@prisma/client';
+import { User } from '@prisma/client';
+// import { PrismaClient, User } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
+
 
 interface JwtPayload {
   userId: string;
@@ -49,9 +52,10 @@ export const authenticate = async (request: NextRequest): Promise<User> => {
   } catch (error) {
     console.error('Authentication error:', error);
     throw error;
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
+  // finally {
+  //   await prisma.$disconnect();
+  // }
 };
 
 // Helper function to use in API routes that need authentication
