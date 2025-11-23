@@ -22,7 +22,7 @@ export default function ProductsPage() {
   const [showAllProducts, setShowAllProducts] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const allCheckboxRef = useRef<HTMLInputElement>(null);
-  const hasProcessedUrlParams = useRef<boolean>(false); // ← ADD THIS
+  const hasProcessedUrlParams = useRef<boolean>(false); 
   const productsPerPage = 8;
   
   const totalProductsPages = Math.ceil(
@@ -72,7 +72,7 @@ export default function ProductsPage() {
     
     // Only process if we haven't already AND we have data AND there's a category param
     if (
-      !hasProcessedUrlParams.current && // ← CHECK THE REF
+      !hasProcessedUrlParams.current && 
       allProducts?.length > 0 && 
       categories?.length > 0 && 
       categorySearch
@@ -98,7 +98,7 @@ export default function ProductsPage() {
             allCheckboxRef.current.checked = false;
           }
           
-          hasProcessedUrlParams.current = true; // ← MARK AS PROCESSED
+          hasProcessedUrlParams.current = true; 
         }
       } catch (err) {
         toast.error("Error processing category. Please try again.", {
@@ -144,7 +144,6 @@ export default function ProductsPage() {
     }
   }, [selectedCategories, priceRange, allProducts, showAllProducts]);
 
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [filteredProducts]);
@@ -269,12 +268,10 @@ export default function ProductsPage() {
                 ))}
               </ul>
 
-              {/* Price Filter */}
               <PriceFilter priceRange={priceRange} handleRange={handleRange} />
             </div>
           </div>
 
-          {/* Products Sorting */}
           <div className="flex-1">
             <ProductSorting
               productsLength={allProducts.length}
@@ -282,14 +279,12 @@ export default function ProductsPage() {
               handleChangeOption={handleChangeOption}
             />
 
-            {/* Products Grid */}
             <div className="">
               {currentProducts.length > 0 &&
                 <ProductsComponent products={currentProducts} />
               }
             </div>
 
-            {/* Pagination */}
             {currentProducts.length > 0 && (
               <Pagination 
                 pageCount={totalProductsPages} 
